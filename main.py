@@ -44,7 +44,6 @@ class GameApplication:
     def draw(self):
         pass
         # self.current_level.draw(self.screen)
-        # self.draw_debug_rects()
 
     def update(self):
         pass
