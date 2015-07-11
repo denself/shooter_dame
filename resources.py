@@ -1,4 +1,5 @@
 import sys
+import gc
 from utils import singleton
 import pygame
 
@@ -26,5 +27,6 @@ class ResourceManager:
 
     def free_unused_resources(self):
         for key, value in self.resource_map.items():
-            if sys.getrefcount(value) < 4:
+            if sys.getrefcount(value) < 5:
                 self.resource_map.pop(key)
+                print gc.get_referrers(value)
