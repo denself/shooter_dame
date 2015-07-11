@@ -21,9 +21,9 @@ class ResourceManager:
         res = self.resource_map.get(name)
         if res is None:
             res = typename(name)
-            self.resource_map.items().append(res)
+            self.resource_map[name] = res
         return res
 
     def free_unused_resources(self):
-        for resource in self.resource_map:
+        for resource in self.resource_map.values():
             print sys.getrefcount(resource)
