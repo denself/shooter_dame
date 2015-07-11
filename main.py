@@ -1,6 +1,11 @@
 import pygame
+from models.entities import PrinterEntity
+from models.level import MenuLevel
 import settings as s
+from utils import singleton
 
+
+@singleton
 class GameApplication:
     def __init__(self, width=s.SCREEN_WIDTH, height=s.SCREEN_HEIGHT):
         pygame.init()
@@ -23,6 +28,13 @@ class GameApplication:
         # Used to manage how fast the screen updates
         self.clock = pygame.time.Clock()
 
+        # Levels
+        self.levels = {}
+        self.current_level = None
+
+    def get_level(self):
+        return self.levels.get(self.current_level)
+
     def main_loop(self):
         self.initialize()
         while not self.done:
@@ -39,20 +51,23 @@ class GameApplication:
         pygame.quit()
 
     def initialize(self):
+        menu = MenuLevel()
+        menu.entities.append(PrinterEntity('Hello world!'))
+        self.levels['menu'] = menu
+        self.current_level = 'menu'
         pass
 
     def draw(self):
-        pass
+        self.get_level().draw()
         # self.current_level.draw(self.screen)
 
     def update(self):
-        pass
         # self.timedEvent.update()
         for event in pygame.event.get():  # User did something
             if event.type == pygame.QUIT:  # If user clicked close
                 self.done = True  # Flag that we are done so we exit this loop
 
-            # self.current_level.inputProcessor.ProcessEvent(event)
+        self.get_level().update()
 
 
 if __name__ == "__main__":

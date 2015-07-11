@@ -6,7 +6,7 @@ class BaseLevel(object):
     """
 
     def __init__(self):
-        entities = []
+        self.entities = []
 
     def initialize(self):
         pass
@@ -15,12 +15,17 @@ class BaseLevel(object):
         pass
 
     def update(self):
-        pass
+        for entity in self.entities:
+            entity.update()
 
     def draw(self):
-        pass
+        for entity in self.entities:
+            entity.draw()
 
 
 class MenuLevel(BaseLevel):
     """ Menu level
     """
+
+    def __init__(self):
+        super(self.__class__, self).__init__()
