@@ -1,4 +1,7 @@
 import pygame
+
+from managers import InputManager
+from models.entities import TestButton
 from models.level import MenuLevel
 from resources import ResourceManager
 import settings as s
@@ -31,6 +34,7 @@ class GameApplication:
         # Levels
         self.levels = {}
         self.current_level = None
+        self.input_manager = None
 
     def get_level(self):
         return self.levels.get(self.current_level)
@@ -40,6 +44,7 @@ class GameApplication:
         while not self.done:
 
             self.update()
+            self.screen.fill((0, 0, 0))
             self.draw()
 
             # Go ahead and update the screen with what we've drawn.
@@ -52,7 +57,9 @@ class GameApplication:
         pygame.quit()
 
     def initialize(self):
+        self.input_manager = InputManager()
         menu = MenuLevel()
+        menu.entities.append(TestButton())
         self.levels['menu'] = menu
         self.current_level = 'menu'
         pass
@@ -63,6 +70,7 @@ class GameApplication:
 
     def update(self):
         # self.timedEvent.update()
+        self.input_manager.update()
         for event in pygame.event.get():  # User did something
             if event.type == pygame.QUIT:  # If user clicked close
                 self.done = True  # Flag that we are done so we exit this loop
