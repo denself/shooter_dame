@@ -59,7 +59,6 @@ class GameApplication:
     def initialize(self):
         self.input_manager = InputManager()
         menu = MenuLevel()
-        menu.entities.append(TestButton())
         self.levels['menu'] = menu
         self.current_level = 'menu'
         pass

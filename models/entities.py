@@ -18,16 +18,24 @@ class BaseEntity(object):
 class BaseButtonEntity(BaseEntity):
     """ Base class for all buttons"""
 
-    def __init__(self, top=0, left=0, width=120, height=80):
+    MARGIN_V = 10
+    MARGIN_H = 10
+
+    def __init__(self, text='', size=(0, 0, 120, 80)):
         super(BaseButtonEntity, self).__init__()
-        self.geometry = pygame.Rect(top, left, width, height)
+        self.geometry = pygame.Rect(size)
         self.inspector = InputManager()
+        # self.text = LabelEntity()
 
     def update(self, *args, **kwargs):
         """ This function called from level update method.
         """
         if self.clicked():
+            self._callback()
             self.callback()
+
+    def _callback(self):
+        pass
 
     def draw(self, surface, *args, **kwargs):
         """ This function called from level draw method.
@@ -66,9 +74,10 @@ class BaseButtonEntity(BaseEntity):
         """ Check whether mouse was clicked on this button.
         :rtype: bool
         """
-        return self.is_mouse_over() and \
+        is_clicked = self.is_mouse_over() and \
             self.inspector.mouse_button_change[0] and \
             not self.inspector.mouse_pressed[0]
+        return is_clicked
 
     def callback(self):
         """ callback function, called if mouse clicked
@@ -79,11 +88,10 @@ class BaseButtonEntity(BaseEntity):
 class TestButton(BaseButtonEntity):
 
     def callback(self):
-        print 'Clicked!'
+        print 'Clicked: {}'.format(self)
 
     def get_color(self):
         """ Return button color depended on button state
-        :return: Color set
         :rtype: tuple
         """
         if self.is_mouse_pressed():
@@ -92,6 +100,36 @@ class TestButton(BaseButtonEntity):
             return 0xD1, 0xCD, 0xCD
         else:
             return 0xB3, 0xB6, 0xB6
+
+
+class CheckBox(BaseButtonEntity):
+
+    def __init__(self, text='', size=(0, 0, 120, 80)):
+        super(CheckBox, self).__init__(text, size)
+        self.is_checked = False
+
+    def _callback(self):
+        """ Change state or checkbox
+        """
+        self.is_checked = not self.is_checked
+
+    def callback(self):
+        print 'Switched {}: {}'.format(self.is_checked, self)
+
+    def get_color(self):
+        """ Return button color depended on button state
+        :rtype: tuple
+        """
+        default_color = 0xB3, 0xB6, 0xB6
+        color_map = {
+            (1, 1, 0): (0xDD, 0x00, 0x00),
+            (1, 1, 1): (0x0D, 0x00, 0x00),
+            (0, 1, 0): (0xD1, 0xCD, 0xCD),
+            (0, 1, 1): (0x01, 0xCD, 0xCD),
+            (0, 0, 1): (0x00, 0x00, 0x00),
+        }
+        key = (self.is_mouse_over(), self.is_mouse_over(), self.is_checked)
+        return color_map.get(key, default_color)
 
 
 class ImageEntity(BaseEntity):
