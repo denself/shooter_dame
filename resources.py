@@ -25,5 +25,6 @@ class ResourceManager:
         return res
 
     def free_unused_resources(self):
-        for resource in self.resource_map.values():
-            print sys.getrefcount(resource)
+        for key, value in self.resource_map.items():
+            if sys.getrefcount(value) < 4:
+                self.resource_map.pop(key)
