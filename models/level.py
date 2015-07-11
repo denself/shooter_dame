@@ -1,3 +1,4 @@
+import os
 from pygame import Color
 from pygame.rect import Rect
 from models.entities import ImageEntity, LabelEntity
@@ -22,9 +23,9 @@ class BaseLevel(object):
         for entity in self.entities:
             entity.update()
 
-    def draw(self, screen):
+    def draw(self, surface):
         for entity in self.entities:
-            entity.draw(screen)
+            entity.draw(surface)
 
 
 class MenuLevel(BaseLevel):
@@ -33,5 +34,7 @@ class MenuLevel(BaseLevel):
 
     def __init__(self):
         super(self.__class__, self).__init__()
-        self.entities.append(ImageEntity("Data\\test.png", Rect(0, 0, 100, 100)))
+        base_dir = os.path.dirname(os.path.dirname(__file__))
+        image_path = os.path.join(base_dir, "Data/test.png")
+        self.entities.append(ImageEntity(image_path, Rect(0, 0, 100, 100)))
         self.entities.append(LabelEntity(300, 100, "hello world!", "Times New Roman", 32, Color(255, 0, 0)))
