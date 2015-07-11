@@ -1,6 +1,6 @@
 import pygame
-from models.entities import PrinterEntity
 from models.level import MenuLevel
+from resources import ResourceManager
 import settings as s
 from utils import singleton
 
@@ -18,7 +18,7 @@ class GameApplication:
         # flags = pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
         flags = pygame.HWSURFACE | pygame.DOUBLEBUF
         self.screen = pygame.display.set_mode(self.screen_size, flags)
-        pygame.display.set_caption("Caligo")
+        pygame.display.set_caption("Shooter Dame")
 
         # self.timedEvent = TimedEvent(168000,self,"music_loop")
 
@@ -45,6 +45,7 @@ class GameApplication:
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 
+            ResourceManager().free_unused_resources()
             # Limit to 60 frames per second
             self.clock.tick(60)
 
@@ -52,13 +53,12 @@ class GameApplication:
 
     def initialize(self):
         menu = MenuLevel()
-        menu.entities.append(PrinterEntity('Hello world!'))
         self.levels['menu'] = menu
         self.current_level = 'menu'
         pass
 
     def draw(self):
-        self.get_level().draw()
+        self.get_level().draw(self.screen)
         # self.current_level.draw(self.screen)
 
     def update(self):

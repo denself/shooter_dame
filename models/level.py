@@ -1,3 +1,6 @@
+from pygame.rect import Rect
+from models.entities import ImageEntity
+
 __author__ = 'denis'
 
 
@@ -18,9 +21,9 @@ class BaseLevel(object):
         for entity in self.entities:
             entity.update()
 
-    def draw(self):
+    def draw(self, screen):
         for entity in self.entities:
-            entity.draw()
+            entity.draw(screen)
 
 
 class MenuLevel(BaseLevel):
@@ -29,3 +32,4 @@ class MenuLevel(BaseLevel):
 
     def __init__(self):
         super(self.__class__, self).__init__()
+        self.entities.append(ImageEntity("Data\\test.png", Rect(0, 0, 100, 100)))
