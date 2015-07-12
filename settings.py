@@ -9,3 +9,5 @@ SCREEN_HEIGHT = 600
 BASE_DIR = os.path.dirname(__file__)
 DATA_DIR = os.path.join(BASE_DIR, 'Data')
 FONTS_DIR = os.path.join(DATA_DIR, 'fonts')
+
+DEFAULT_FONT = 'd_day_stencil'

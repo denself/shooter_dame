@@ -1,32 +1,53 @@
-__author__ = 'denis'
+import sys
+
+__author__ = 'Denis Ivanets (denself@gmail.com)'
+
 
 def singleton(cls):
-    def _singleton(*args, **kwarg):
+    def _singleton(*args, **kwargs):
         if _singleton.obj is None:
-            _singleton.obj = cls(*args, **kwarg)
+            _singleton.obj = cls(*args, **kwargs)
         return _singleton.obj
     _singleton.obj = None
     return _singleton
 
 
-if __name__ == '__main__':
-    @singleton
-    class A(object):
-        def __init__(self, a):
-            self.a = a
+class ResourceManager(object):
 
-    @singleton
-    class B(object):
-        def __init__(self, a):
-            self.a = a
+    resource_map = {}
 
-    a, b = A(1), A(2)
-    print a.a, b.a
-    print type(A), type(a)
+    def __new__(cls, *args, **kwargs):
+        return cls
 
-    c, d = B(3), B(4)
-    print c.a, d.a
-    print type(B), type(c)
+    @classmethod
+    def resource_old(cls, old_cls):
+        def _new_class(new_cls, *args, **kwargs):
+            key = old_cls.get_key(*args, **kwargs)
+            res = cls.resource_map.get(key)
+            if res is None:
+                res = super(old_cls, new_cls).__new__(new_cls, *args)
+                cls.resource_map[key] = res
+            return res
+        old_cls.__new__ = _new_class
+        return old_cls
 
-    e = A(5)
-    print e.a
+    @classmethod
+    def resource(cls, new_cls):
+
+        assert hasattr(new_cls, 'get_key'), \
+            "Resource does not have get_key method"
+
+        def _new_class(*args, **kwargs):
+            key = new_cls.get_key(*args, **kwargs)
+            res = cls.resource_map.get(key)
+            if res is None:
+                res = new_cls(*args, **kwargs)
+                cls.resource_map[key] = res
+            return res
+        return _new_class
+
+    @classmethod
+    def free_unused_resources(cls):
+        for key, value in cls.resource_map.items():
+            if sys.getrefcount(value) < 5:
+                cls.resource_map.pop(key)

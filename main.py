@@ -1,11 +1,9 @@
 import pygame
 
 from managers import InputManager
-from models.entities import TestButton
 from models.level import MenuLevel
-from resources import ResourceManager
 import settings as s
-from utils import singleton
+from utils import singleton, ResourceManager
 
 
 @singleton
@@ -50,7 +48,7 @@ class GameApplication:
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 
-            ResourceManager().free_unused_resources()
+            ResourceManager.free_unused_resources()
             # Limit to 60 frames per second
             self.clock.tick(60)
 
@@ -61,11 +59,9 @@ class GameApplication:
         menu = MenuLevel()
         self.levels['menu'] = menu
         self.current_level = 'menu'
-        pass
 
     def draw(self):
         self.get_level().draw(self.screen)
-        # self.current_level.draw(self.screen)
 
     def update(self):
         # self.timedEvent.update()

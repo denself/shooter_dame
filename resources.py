@@ -1,32 +1,38 @@
-import sys
-import gc
-from utils import singleton
+from utils import ResourceManager
 import pygame
+from utils.files import get_font_file
 
+
+@ResourceManager.resource
 class Texture(object):
-    def __init__(self, name=None, data=None):
+
+    def __init__(self, name=None):
         self.data = pygame.image.load(name).convert_alpha()
 
     def get(self):
         return self.data
 
-    def __set__(self, instance, value):
-        raise SyntaxError('You can not set texture')
+    @classmethod
+    def get_key(cls, name):
+        """ Generates key, used to get Font from Resource manager """
+        return name
 
-@singleton
-class ResourceManager:
-    def __init__(self):
-        self.resource_map = {}
 
-    def get_resource(self, typename, name):
-        res = self.resource_map.get(name)
-        if res is None:
-            res = typename(name)
-            self.resource_map[name] = res
-        return res
+@ResourceManager.resource
+class Font(pygame.font.Font):
+    """ Font resource, helps to load custom font from file """
 
-    def free_unused_resources(self):
-        for key, value in self.resource_map.items():
-            if sys.getrefcount(value) < 5:
-                self.resource_map.pop(key)
-                print gc.get_referrers(value)
+    pattern = '{}:{}'
+
+    def __init__(self, name, size):
+        """ Get font from file in settings.FONTS_DIR
+        :param name: Font name
+        :param size: Font size
+        """
+        file_name = get_font_file(name)
+        pygame.font.Font.__init__(self, file_name, size)
+
+    @classmethod
+    def get_key(cls, name, size):
+        """ Generates key, used to get Font from Resource manager """
+        return cls.pattern.format(name, size)

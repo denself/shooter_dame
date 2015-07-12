@@ -1,7 +1,6 @@
-import os
-from pygame import Color
 from pygame.rect import Rect
-from models.entities import ImageEntity, LabelEntity, TestButton, CheckBox
+from models.ui import ImageEntity, LabelEntity, TestButton, CheckBox
+from utils.files import get_data_file
 
 __author__ = 'denis'
 
@@ -34,10 +33,8 @@ class MenuLevel(BaseLevel):
 
     def __init__(self):
         super(self.__class__, self).__init__()
-        base_dir = os.path.dirname(os.path.dirname(__file__))
-        image_path = os.path.join(base_dir, "Data/test.png")
-        self.entities.append(ImageEntity(image_path, Rect(0, 0, 100, 100)))
-        # self.entities.append(LabelEntity(300, 100, "hello world!", "Times New Roman", 32, Color(255, 0, 0)))
-        self.entities.append(TestButton('Hello', size=(300, 100, 220, 80)))
-        self.entities.append(TestButton('Hello', size=(300, 200, 220, 80)))
-        self.entities.append(CheckBox('Hello', size=(300, 300, 220, 80)))
+        image_path = get_data_file('back.jpg')
+        self.entities.append(ImageEntity(image_path, geometry=Rect(0, 0, 100, 100)))
+        self.entities.append(TestButton('Button 1', geometry=(300, 100, 220, 80)))
+        self.entities.append(LabelEntity('Hello', geometry=(300, 200, 220, 80)))
+        self.entities.append(CheckBox('Check box', geometry=(300, 300, 220, 80)))
