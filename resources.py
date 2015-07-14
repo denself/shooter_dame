@@ -8,6 +8,7 @@ class Texture(object):
 
     def __init__(self, name=None):
         self.data = pygame.image.load(name).convert_alpha()
+        # self.data = pygame.image.load(name)
 
     def get(self):
         return self.data

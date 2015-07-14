@@ -1,4 +1,5 @@
 from pygame.rect import Rect
+from models.sprite import Sprite
 from models.ui import ImageEntity, LabelEntity, TestButton, CheckBox
 from utils.files import get_data_file
 
@@ -38,3 +39,4 @@ class MenuLevel(BaseLevel):
         self.entities.append(TestButton('Button 1', geometry=(300, 100, 220, 80)))
         self.entities.append(LabelEntity('Hello', geometry=(300, 200, 220, 80)))
         self.entities.append(CheckBox('Check box', geometry=(300, 300, 220, 80)))
+        self.entities.append(Sprite('test', (100, 100, 60, 60)))
